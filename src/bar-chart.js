@@ -1,6 +1,6 @@
 import React from "react";
 import { View } from "react-native";
-import { Svg, Rect, G } from "react-native-svg";
+import { Svg, Rect, G, Text } from "react-native-svg";
 import AbstractChart from "./abstract-chart";
 
 const barWidth = 32;
@@ -29,8 +29,35 @@ class BarChart extends AbstractChart {
             ((barHeight > 0 ? baseHeight - barHeight : baseHeight) / 4) * 3 +
             paddingTop
           }
+          rx={barWidth/2}
           width={barWidth}
           height={(Math.abs(barHeight) / 4) * 3}
+          fill="url(#fillShadowGradient)"
+        />
+      );
+    });
+  };
+
+  renderBelowBars = config => {
+    const { data, width, height, paddingTop, paddingRight } = config;
+    const baseHeight = this.calcBaseHeight(data, height);
+    return data.map((x, i) => {
+      const barHeight = this.calcHeight(x, data, height);
+      const barWidth = 32 * this.getBarPercentage();
+      return (
+        <Rect
+          key={Math.random()}
+          x={
+            paddingRight +
+            (i * (width - paddingRight)) / data.length +
+            barWidth / 2
+          }
+          y={
+            ((barHeight > 0 ? baseHeight - barHeight : baseHeight) / 4) * 3 +
+            paddingTop + (Math.abs(barHeight) / 4) * 3/2
+          }
+          width={barWidth}
+          height={(Math.abs(barHeight) / 4) * 3/2}
           fill="url(#fillShadowGradient)"
         />
       );
@@ -60,6 +87,29 @@ class BarChart extends AbstractChart {
     });
   };
 
+  renderYAxisTitle = config => {
+    return (
+      <Text
+        rotation={-90}
+        x={-1*config.height/2}
+        y={config.paddingRight/3}
+      >
+        {this.props.yAxisTitle}
+      </Text>
+    );
+  };
+
+  renderXAxisTitle = config => {
+    return (
+      <Text
+        x={(config.width+94)/2-this.props.xAxisTitle.length*2}
+        y={config.height}
+      >
+        {this.props.xAxisTitle}
+      </Text>
+    );
+  };
+
   render() {
     const {
       width,
@@ -70,9 +120,10 @@ class BarChart extends AbstractChart {
       withVerticalLabels = true,
       verticalLabelRotation = 0,
       horizontalLabelRotation = 0,
-      withInnerLines = true
+      withInnerLines = true,
+      yAxisTitle = "hello"
     } = this.props;
-    const { borderRadius = 0, paddingTop = 16, paddingRight = 64 } = style;
+    const { borderRadius = 0, paddingTop = 16, paddingRight = 94 } = style;
     const config = {
       width,
       height,
@@ -94,15 +145,6 @@ class BarChart extends AbstractChart {
             fill="url(#backgroundGradient)"
           />
           <G>
-            {withInnerLines
-              ? this.renderHorizontalLines({
-                  ...config,
-                  count: 4,
-                  paddingTop
-                })
-              : null}
-          </G>
-          <G>
             {withHorizontalLabels
               ? this.renderHorizontalLabels({
                   ...config,
@@ -110,6 +152,28 @@ class BarChart extends AbstractChart {
                   data: data.datasets[0].data,
                   paddingTop,
                   paddingRight
+                })
+              : null}
+          </G>
+          <G>
+            {yAxisTitle
+              ? this.renderYAxisTitle({
+                  ...config,
+                  labels: data.labels,
+                  paddingRight,
+                  paddingTop,
+                  horizontalOffset: barWidth * this.getBarPercentage()
+                })
+              : null}
+          </G>
+          <G>
+            {yAxisTitle
+              ? this.renderXAxisTitle({
+                  ...config,
+                  labels: data.labels,
+                  paddingRight,
+                  paddingTop,
+                  horizontalOffset: barWidth * this.getBarPercentage()
                 })
               : null}
           </G>
@@ -133,7 +197,7 @@ class BarChart extends AbstractChart {
             })}
           </G>
           <G>
-            {this.renderBarTops({
+          {this.renderBelowBars({
               ...config,
               data: data.datasets[0].data,
               paddingTop,
