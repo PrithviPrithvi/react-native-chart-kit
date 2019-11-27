@@ -1,6 +1,6 @@
 import React from "react";
 import { View } from "react-native";
-import { Svg, Rect, Text, G, Path } from "react-native-svg";
+import { Svg, Rect, Text, G, Path, Image, TSpan } from "react-native-svg";
 import AbstractChart from "./abstract-chart";
 
 const Pie = require("paths-js/pie");
@@ -37,11 +37,21 @@ class PieChart extends AbstractChart {
           value = Math.round((100 / total) * c.item[this.props.accessor]) + "%";
         }
       }
-
       return (
         <G key={Math.random()}>
           <Path d={c.sector.path.print()} fill={c.item.color} />
-          {hasLegend ? (
+          {hasLegend ? this.props.showImage ? (
+          <Image
+            x={this.props.width / 2.5 - 24}
+            y={
+              -(this.props.height / 3) +
+              ((this.props.height * 0.8) / this.props.data.length) * i +
+              12
+            }
+            width="26px"
+            height="26px"
+            href={c.item.imagePath}
+          />) : (
             <Rect
               width="16px"
               height="16px"
@@ -50,7 +60,7 @@ class PieChart extends AbstractChart {
               ry={8}
               x={this.props.width / 2.5 - 24}
               y={
-                -(this.props.height / 2.5) +
+                -(this.props.height / 3) +
                 ((this.props.height * 0.8) / this.props.data.length) * i +
                 12
               }
@@ -60,14 +70,15 @@ class PieChart extends AbstractChart {
             <Text
               fill={c.item.legendFontColor}
               fontSize={c.item.legendFontSize}
-              x={this.props.width / 2.5}
+              x={this.props.width / 2.4}
               y={
-                -(this.props.height / 2.5) +
+                -(this.props.height / 3) +
                 ((this.props.height * 0.8) / this.props.data.length) * i +
                 12 * 2
               }
             >
-              {`${value} ${c.item.name}`}
+            <TSpan fontSize={this.props.valueFontSize} fontWeight={this.props.valueFontWeight}>{value}</TSpan>
+            <TSpan fontSize={this.props.nameFontSize} fontWeight={this.props.nameFontWeight} x={this.props.width / 2.4} dy="15">{c.item.name}</TSpan>
             </Text>
           ) : null}
         </G>

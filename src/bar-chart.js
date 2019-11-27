@@ -12,56 +12,64 @@ class BarChart extends AbstractChart {
   };
 
   renderBars = config => {
-    const { data, width, height, paddingTop, paddingRight } = config;
+    const { data, width, height, paddingTop, paddingRight, datasets } = config;
     const baseHeight = this.calcBaseHeight(data, height);
-    return data.map((x, i) => {
-      const barHeight = this.calcHeight(x, data, height);
-      const barWidth = 32 * this.getBarPercentage();
-      return (
-        <Rect
-          key={Math.random()}
-          x={
-            paddingRight +
-            (i * (width - paddingRight)) / data.length +
-            barWidth / 2
-          }
-          y={
-            ((barHeight > 0 ? baseHeight - barHeight : baseHeight) / 4) * 3 +
-            paddingTop
-          }
-          rx={barWidth/2}
-          width={barWidth}
-          height={(Math.abs(barHeight) / 4) * 3}
-          fill="url(#fillShadowGradient)"
-        />
-      );
-    });
+    var bars = [];
+    for(var inc=0; inc<datasets.length; inc++) {
+      datasets[inc].data.map((x, i) => {
+        const barHeight = this.calcHeight(x, datasets[inc].data, height);
+        const barWidth = 32 * this.getBarPercentage();
+        bars.push(
+          <Rect
+            key={Math.random()}
+            x={
+              paddingRight +
+              (i * (width - paddingRight)) / data.length +
+              barWidth / 2 + barWidth/datasets.length * inc
+            }
+            y={
+              ((barHeight > 0 ? baseHeight - barHeight : baseHeight) / 4) * 3 +
+              paddingTop
+            }
+            rx={barWidth/2}
+            width={barWidth/datasets.length}
+            height={(Math.abs(barHeight) / 4) * 3}
+            fill={this.props.barColors.length > inc ? this.props.barColors[inc] : this.props.barColors[0]}
+          />
+        );
+      });
+    }
+    return bars;
   };
 
   renderBelowBars = config => {
-    const { data, width, height, paddingTop, paddingRight } = config;
+    const { data, width, height, paddingTop, paddingRight, datasets } = config;
     const baseHeight = this.calcBaseHeight(data, height);
-    return data.map((x, i) => {
-      const barHeight = this.calcHeight(x, data, height);
-      const barWidth = 32 * this.getBarPercentage();
-      return (
-        <Rect
-          key={Math.random()}
-          x={
-            paddingRight +
-            (i * (width - paddingRight)) / data.length +
-            barWidth / 2
-          }
-          y={
-            ((barHeight > 0 ? baseHeight - barHeight : baseHeight) / 4) * 3 +
-            paddingTop + (Math.abs(barHeight) / 4) * 3/2
-          }
-          width={barWidth}
-          height={(Math.abs(barHeight) / 4) * 3/2}
-          fill="url(#fillShadowGradient)"
-        />
-      );
-    });
+    var bars = [];
+    for(var inc=0; inc<datasets.length; inc++) {
+      datasets[inc].data.map((x, i) => {
+        const barHeight = this.calcHeight(x, datasets[inc].data, height);
+        const barWidth = 32 * this.getBarPercentage();
+        bars.push(
+          <Rect
+            key={Math.random()}
+            x={
+              paddingRight +
+              (i * (width - paddingRight)) / data.length +
+              barWidth / 2 + barWidth/datasets.length * inc
+            }
+            y={
+              ((barHeight > 0 ? baseHeight - barHeight : baseHeight) / 4) * 3 +
+              paddingTop + (Math.abs(barHeight) / 4) * 3/2
+            }
+            width={barWidth/datasets.length}
+            height={(Math.abs(barHeight) / 4) * 3/2}
+            fill={this.props.barColors.length > inc ? this.props.barColors[inc] : this.props.barColors[0]}
+          />
+        );
+      });
+    }
+    return bars;
   };
 
   renderBarTops = config => {
@@ -90,6 +98,8 @@ class BarChart extends AbstractChart {
   renderYAxisTitle = config => {
     return (
       <Text
+        fillOpacity={this.props.yAxisTitleOpacity}
+        fontWeight={this.props.yAxisTitleWeight}
         rotation={-90}
         x={-1*config.height/2}
         y={config.paddingRight/3}
@@ -102,6 +112,8 @@ class BarChart extends AbstractChart {
   renderXAxisTitle = config => {
     return (
       <Text
+        fillOpacity={this.props.xAxisTitleOpacity}
+        fontWeight={this.props.xAxisTitleWeight}
         x={(config.width+94)/2-this.props.xAxisTitle.length*2}
         y={config.height}
       >
@@ -192,6 +204,7 @@ class BarChart extends AbstractChart {
             {this.renderBars({
               ...config,
               data: data.datasets[0].data,
+              datasets: data.datasets,
               paddingTop,
               paddingRight
             })}
@@ -200,6 +213,7 @@ class BarChart extends AbstractChart {
           {this.renderBelowBars({
               ...config,
               data: data.datasets[0].data,
+              datasets: data.datasets,
               paddingTop,
               paddingRight
             })}
