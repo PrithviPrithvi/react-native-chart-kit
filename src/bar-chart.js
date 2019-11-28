@@ -31,7 +31,7 @@ class BarChart extends AbstractChart {
               ((barHeight > 0 ? baseHeight - barHeight : baseHeight) / 4) * 3 +
               paddingTop
             }
-            rx={barWidth/2}
+            rx={barWidth/datasets.length/2}
             width={barWidth/datasets.length}
             height={(Math.abs(barHeight) / 4) * 3}
             fill={this.props.barColors.length > inc ? this.props.barColors[inc] : this.props.barColors[0]}
