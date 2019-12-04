@@ -78,7 +78,7 @@ class PieChart extends AbstractChart {
               }
             >
             <TSpan fontSize={this.props.valueFontSize} fontWeight={this.props.valueFontWeight}>{value}</TSpan>
-            <TSpan fontSize={this.props.nameFontSize} fontWeight={this.props.nameFontWeight} x={this.props.width / 2.4} dy="15">{c.item.name}</TSpan>
+            <TSpan fontSize={this.props.nameFontSize} fontWeight={this.props.nameFontWeight} x={this.props.width / 2.4} dy="22">{c.item.name}</TSpan>
             </Text>
           ) : null}
         </G>

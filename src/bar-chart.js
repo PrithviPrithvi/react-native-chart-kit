@@ -65,6 +65,7 @@ class BarChart extends AbstractChart {
             width={barWidth/datasets.length}
             height={(Math.abs(barHeight) / 4) * 3/2}
             fill={this.props.barColors.length > inc ? this.props.barColors[inc] : this.props.barColors[0]}
+            onPress={()=> console.warn('dddd')}
           />
         );
       });
@@ -114,8 +115,8 @@ class BarChart extends AbstractChart {
       <Text
         fillOpacity={this.props.xAxisTitleOpacity}
         fontWeight={this.props.xAxisTitleWeight}
-        x={(config.width+94)/2-this.props.xAxisTitle.length*2}
-        y={config.height}
+        x={(config.width+94)/2-this.props.xAxisTitle.length*2.5}
+        y={config.height - 2}
       >
         {this.props.xAxisTitle}
       </Text>
@@ -133,7 +134,8 @@ class BarChart extends AbstractChart {
       verticalLabelRotation = 0,
       horizontalLabelRotation = 0,
       withInnerLines = true,
-      yAxisTitle = "hello"
+      yAxisTitle,
+      xAxisTitle,
     } = this.props;
     const { borderRadius = 0, paddingTop = 16, paddingRight = 94 } = style;
     const config = {
@@ -179,7 +181,7 @@ class BarChart extends AbstractChart {
               : null}
           </G>
           <G>
-            {yAxisTitle
+            {xAxisTitle
               ? this.renderXAxisTitle({
                   ...config,
                   labels: data.labels,
