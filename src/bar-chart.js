@@ -11,13 +11,31 @@ class BarChart extends AbstractChart {
     return barPercentage;
   };
 
+  getIndexOfMaxHeight = (datasets) => {
+    var indexOfMaxHeight = 0;
+    var maxHeight = 0;
+    datasets.forEach((element, index) => {
+      if(element.data && element.data.length) {
+        element.data.forEach(data=>{
+          if(data > maxHeight) {
+            maxHeight = data;
+            indexOfMaxHeight = index
+            return null;
+          }
+        })
+      }
+    });
+    return indexOfMaxHeight;
+  }
+
   renderBars = config => {
     const { data, width, height, paddingTop, paddingRight, datasets } = config;
     const baseHeight = this.calcBaseHeight(data, height);
     var bars = [];
+    var indexOfMaxHeight = this.getIndexOfMaxHeight(datasets);
     for(var inc=0; inc<datasets.length; inc++) {
       datasets[inc].data.map((x, i) => {
-        const barHeight = this.calcHeight(x, datasets[inc].data, height);
+        const barHeight = this.calcHeight(x, datasets[indexOfMaxHeight].data, height);
         const barWidth = 32 * this.getBarPercentage();
         bars.push(
           <Rect
@@ -35,6 +53,7 @@ class BarChart extends AbstractChart {
             width={barWidth/datasets.length}
             height={(Math.abs(barHeight) / 4) * 3}
             fill={this.props.barColors.length > inc ? this.props.barColors[inc] : this.props.barColors[0]}
+            // onPress={()=> console.warn('dddd')}
           />
         );
       });
@@ -46,9 +65,10 @@ class BarChart extends AbstractChart {
     const { data, width, height, paddingTop, paddingRight, datasets } = config;
     const baseHeight = this.calcBaseHeight(data, height);
     var bars = [];
+    var indexOfMaxHeight = this.getIndexOfMaxHeight(datasets);
     for(var inc=0; inc<datasets.length; inc++) {
       datasets[inc].data.map((x, i) => {
-        const barHeight = this.calcHeight(x, datasets[inc].data, height);
+        const barHeight = this.calcHeight(x, datasets[indexOfMaxHeight].data, height);
         const barWidth = 32 * this.getBarPercentage();
         bars.push(
           <Rect
@@ -65,7 +85,7 @@ class BarChart extends AbstractChart {
             width={barWidth/datasets.length}
             height={(Math.abs(barHeight) / 4) * 3/2}
             fill={this.props.barColors.length > inc ? this.props.barColors[inc] : this.props.barColors[0]}
-            onPress={()=> console.warn('dddd')}
+            // onPress={()=> console.warn('dddd')}
           />
         );
       });
