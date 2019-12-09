@@ -122,7 +122,7 @@ class BarChart extends AbstractChart {
         fillOpacity={this.props.yAxisTitleOpacity}
         fontWeight={this.props.yAxisTitleWeight}
         rotation={-90}
-        x={-1*config.height/2}
+        x={-1*config.height/config.height*160}
         y={config.paddingRight/3}
       >
         {this.props.yAxisTitle}
@@ -166,7 +166,7 @@ class BarChart extends AbstractChart {
     };
     return (
       <View style={style}>
-        <Svg height={height} width={width}>
+        <Svg height={height+10} width={width}>
           {this.renderDefs({
             ...config,
             ...this.props.chartConfig
