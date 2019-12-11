@@ -136,7 +136,7 @@ class BarChart extends AbstractChart {
         fillOpacity={this.props.xAxisTitleOpacity}
         fontWeight={this.props.xAxisTitleWeight}
         x={(config.width+94)/2-this.props.xAxisTitle.length*2.5}
-        y={config.height - 2}
+        y={config.height}
       >
         {this.props.xAxisTitle}
       </Text>
@@ -157,9 +157,9 @@ class BarChart extends AbstractChart {
       yAxisTitle,
       xAxisTitle,
     } = this.props;
-    const { borderRadius = 0, paddingTop = 16, paddingRight = 94 } = style;
+    const { borderRadius = 0, paddingTop = 16, paddingRight = 64 } = style;
     const config = {
-      width,
+      width: width - 5,
       height,
       verticalLabelRotation,
       horizontalLabelRotation
